@@ -1,11 +1,15 @@
 import dotenv from 'dotenv'
-import { Client } from 'discord.js'
+import { Client, WebhookClient } from 'discord.js'
 
 dotenv.config()
 
 const client = new Client({
     partials: ['MESSAGE','REACTION']
 })
+
+const webhookClient = new WebhookClient(process.env.WEBHOOK_ID, process.env.WEBHOOK_TOKEN )
+const webhookChillClient = new WebhookClient(process.env.WEBHOOK_ID_CHILL, process.env.WEBHOOK_TOKEN_CHILL )
+
 const PREFIX = '!'
 
 client.on('ready', () => {
@@ -59,6 +63,14 @@ client.on('message', async(message) => {
                 message.reply('An error occured, either i lack authority to ban the user or user does not exist')
             }
             
+        }
+        else if(CMD_NAME === 'announce')
+        {
+            console.log(args)
+            const msg = args.join(' ')
+            console.log(msg)
+            webhookClient.send(msg)
+            webhookChillClient.send(msg)
         }
     }
 
